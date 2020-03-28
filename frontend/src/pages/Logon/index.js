@@ -8,6 +8,7 @@ import LogoImg from '../../assets/logo.svg'
 
 export default function Logon(){
     return (
+      
         <div className="logon-containter">
         <section className="form">
           <img src={LogoImg} alt="Logo"/>
