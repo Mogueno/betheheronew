@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import './styles.css'
 import logoImg from "../../assets/logo.svg";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import api from "../../services/api";
+
+
+
 
 export default function NewIncident(){
+
+  const ongId = localStorage.getItem("ongId");
+const [title, setTitle] = useState('');
+const [description, setDescription] = useState('');
+const [value, setValue] = useState('');
+const history = useHistory();
+
+async function handleNewIncident(e){
+  e.preventDefault();
+  const data = {title, description, value}
+  try {
+    const response = await api.post('incidents', data, {
+      headers:{
+        auth: ongId
+      }})
+      
+    console.log("response.data", response.data)
+    history.push('/profile')
+  } catch (error) {
+    alert("erro ao inserir novo caso")
+  }
+  
+}
     return(
 <div className="new-incident">
       <div className="content">
@@ -21,10 +48,10 @@ export default function NewIncident(){
         </Link>
         </section>
        
-        <form>
-          <input type="text" placeholder="Título do caso"></input>
-          <textarea type="text" placeholder="Descrição"></textarea>
-          <input type="text" placeholder="Valor em reais"></input>
+        <form onSubmit={handleNewIncident}>
+          <input type="text" placeholder="Título do caso" value={title} onChange={ e => setTitle(e.target.value) }></input>
+          <textarea type="text" placeholder="Descrição" value={description} onChange={ e => setDescription(e.target.value) }></textarea>
+          <input type="text" placeholder="Valor em reais" value={value} onChange={ e => setValue(e.target.value) }></input>
         
           <button className="button" type="submit">
             Enviar
